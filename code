@@ -1,0 +1,152 @@
+package labexam;
+import javax.swing.*;
+import java.awt.*;
+public class labexamtoyongan {
+
+	static String[] ope = { "None", "+", "-", "*", "/" };
+
+	public static void main(String[] args) {
+
+		JFrame frame = new JFrame("Computer Language Conversion");
+		frame.setSize(620, 400);
+		frame.setLayout(null);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(14, 1, 30));
+		panel.setBounds(0, 0, 620, 400);
+		panel.setLayout(null);
+		frame.add(panel);
+
+		JLabel titleLabel = new JLabel("Decimal Converter");
+		titleLabel.setForeground(Color.WHITE);
+		titleLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		titleLabel.setBounds(15, 5, 400, 25);
+		panel.add(titleLabel);
+
+		JTextField binaryField = new JTextField();
+		binaryField.setBounds(150, 50, 435, 35);
+		binaryField.setEditable(false);
+		panel.add(binaryField);
+
+		JTextField octalField = new JTextField();
+		octalField.setBounds(150, 100, 435, 35);
+		octalField.setEditable(false);
+		panel.add(octalField);
+
+		JTextField hexField = new JTextField();
+		hexField.setBounds(150, 150, 435, 35);
+		hexField.setEditable(false);
+		panel.add(hexField);
+
+		JTextField decimalField = new JTextField();
+		decimalField.setBounds(150, 200, 435, 35);
+		decimalField.setEditable(false);
+		panel.add(decimalField);
+
+		JLabel binaryLabel = new JLabel("Binary");
+		binaryLabel.setForeground(Color.WHITE);
+		binaryLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		binaryLabel.setBounds(15, 50, 400, 25);
+		panel.add(binaryLabel);
+
+		JLabel octalLabel = new JLabel("Octal");
+		octalLabel.setForeground(Color.WHITE);
+		octalLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		octalLabel.setBounds(15, 100, 400, 25);
+		panel.add(octalLabel);
+
+		JLabel hexLabel = new JLabel("Hexa");
+		hexLabel.setForeground(Color.WHITE);
+		hexLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		hexLabel.setBounds(15, 150, 400, 25);
+		panel.add(hexLabel);
+
+		JLabel decimalLabel = new JLabel("Dec");
+		decimalLabel.setForeground(Color.WHITE);
+		decimalLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+		decimalLabel.setBounds(15, 200, 400, 25);
+		panel.add(decimalLabel);
+
+		JButton convertButton = new JButton("Convert");
+		convertButton.setBackground(Color.gray);
+		convertButton.setForeground(Color.WHITE);
+		convertButton.setBounds(225, 250, 150, 80);
+		convertButton.addActionListener(e -> {
+			JTextField inputField1 = new JTextField();
+			JTextField inputField2 = new JTextField();
+			JComboBox<String> operationBox = new JComboBox<>(ope); // Fixed this line
+
+			Object[] operatorSelection = { "Select Operator", operationBox };
+			int operatorResult = JOptionPane.showConfirmDialog(null, operatorSelection, "Choose Operation",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (operatorResult == JOptionPane.OK_OPTION) {
+				String selectedOperation = (String) operationBox.getSelectedItem();
+
+				if ("None".equals(selectedOperation)) {
+					Object[] singleInput = { "Enter Decimal Number", inputField1 };
+					int inputResult = JOptionPane.showConfirmDialog(null, singleInput, "Single Number Conversion",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (inputResult == JOptionPane.OK_OPTION) {
+						try {
+							int value = Integer.parseInt(inputField1.getText().trim());
+							decimalField.setText(String.valueOf(value));
+							binaryField.setText(Integer.toBinaryString(value));
+							octalField.setText(Integer.toOctalString(value));
+							hexField.setText(Integer.toHexString(value).toUpperCase());
+						} catch (NumberFormatException ex) {
+							JOptionPane.showMessageDialog(frame, "Please enter a valid integer.", "Input Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				} else {
+					Object[] dualInput = { "Number 1", inputField1, "Number 2", inputField2 };
+					int inputResult = JOptionPane.showConfirmDialog(null, dualInput, "Arithmetic Operation",
+							JOptionPane.OK_CANCEL_OPTION);
+					if (inputResult == JOptionPane.OK_OPTION) {
+						try {
+							double n1 = Double.parseDouble(inputField1.getText().trim());
+							double n2 = Double.parseDouble(inputField2.getText().trim());
+							double result = 0;
+
+							switch (selectedOperation) {
+							case "+":
+								result = n1 + n2;
+								break;
+							case "-":
+								result = n1 - n2;
+								break;
+							case "*":
+								result = n1 * n2;
+								break;
+							case "/":
+								if (n2 == 0) {
+									JOptionPane.showMessageDialog(frame, "Cannot divide by zero.", "Math Error",
+											JOptionPane.ERROR_MESSAGE);
+									return;
+								}
+								result = n1 / n2;
+								break;
+							}
+
+							int finalResult = (int) Math.round(result);
+							decimalField.setText(String.valueOf(finalResult));
+							binaryField.setText(Integer.toBinaryString(finalResult));
+							octalField.setText(Integer.toOctalString(finalResult));
+							hexField.setText(Integer.toHexString(finalResult).toUpperCase());
+
+						} catch (NumberFormatException ex) {
+							JOptionPane.showMessageDialog(frame, "Please enter valid numbers.", "Input Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			}
+		});
+		panel.add(convertButton);
+
+		frame.setVisible(true);
+	}
+}
